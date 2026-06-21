@@ -11,13 +11,13 @@ User_route = APIRouter(prefix='/Auth')
 
 
 @User_route.post('/register',response_model=Response_Model)
-@limiter.limit("3/minute")
+@limiter.limit("300/minute")
 def create_account(request: Request,body:User_Schema,db = Depends(get_db)):
     return controller.register_user(body,db)
 
 
 @User_route.post('/login')
-@limiter.limit("5/minute")
+@limiter.limit("500/minute")
 def login(request: Request,body: Login_Schema,db=Depends(get_db)):
     return controller.login_user(body, db)
 
