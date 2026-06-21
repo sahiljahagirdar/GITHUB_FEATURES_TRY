@@ -96,3 +96,34 @@ def generate_random_episode(db:session):
 def latest_episode(db:session):
     latest_episode = db.query(Episode).order_by(Episode.id.desc()).first()
     return latest_episode
+
+def search_episodes(keyword:str,page:int,limit:int,db:session):
+    query = db.query(Episode).filter(Episode.title.ilike(f"%{keyword}%"))
+
+    total_records = query.count()
+
+    if total_records == 0:
+        raise HTTPException(
+            status_code = status.HTTP_404_NOT_FOUND,
+            detail = f'No episodes matching {keyword}'
+        )
+
+    total_pages = ceil(total_records / limit)
+
+    if page > total_pages:
+        raise HTTPException(
+            status_code = status.HTTP_404_NOT_FOUND,
+            detail=f'Page {page} does not exists. Last available page is {total_pages}'
+        )
+
+    episodes = (query.order_by(Episode.id).offset((page - 1) * limit).limit(limit).all())
+
+    return {
+        "page": page,
+        "limit": limit,
+        "total_records": total_records,
+        "total_pages": total_pages,
+        "has_next": page < total_pages,
+        "has_previous": page > 1,
+        "data": episodes
+    }
