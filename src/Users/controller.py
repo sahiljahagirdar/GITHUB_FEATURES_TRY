@@ -106,3 +106,23 @@ def generate_API_key(db:session,user:UserModel):
     return {
         "api_key" : raw_key
     }
+
+def get_my_api_key(db: session, user: UserModel):
+
+    keys = db.query(APIKEY).filter(APIKEY.user_id == user.id).all()
+
+    if not keys:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="No API keys found"
+        )
+
+
+    return [
+        {
+            "id": key.id,
+            "created_at": key.created_at,
+            "is_active": key.is_active
+        }
+        for key in keys
+    ]

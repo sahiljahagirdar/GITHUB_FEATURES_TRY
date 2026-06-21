@@ -24,3 +24,7 @@ def get_me(db = Depends(get_db),user:UserModel = Depends(is_authenticated)):
 @User_route.post('/get_api_key')
 def generate_api_key(db=Depends(get_db),user:UserModel = Depends(is_authenticated)):
     return controller.generate_API_key(db,user)
+
+@User_route.get('/my_api_keys')
+def get_my_keys(db=Depends(get_db),user:UserModel = Depends(is_authenticated)):
+    return controller.get_my_api_key(db,user)
