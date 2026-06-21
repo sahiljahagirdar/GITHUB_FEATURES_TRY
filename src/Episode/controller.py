@@ -81,3 +81,14 @@ def stats(db: session):
             "runtime": last_episode.runtime
         } if last_episode else None,
     }
+
+def generate_random_episode(db:session):
+    episode = db.query(Episode).order_by(func.random()).first()
+
+    if not episode:
+        raise HTTPException(
+            status_code = status.HTTP_404_NOT_FOUND,
+            detail = 'Episode not found'
+        )
+    
+    return episode

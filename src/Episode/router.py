@@ -20,3 +20,7 @@ def one_episode(episode_id:int,db:session = Depends(get_db)):
 @episode_route.get('/status')
 def my_status(db:session = Depends(get_db)):
     return controller.stats(db)
+
+@episode_route.get('/random',response_model=ResponseModel)
+def get_random_episode(db = Depends(get_db)):
+    return controller.generate_random_episode(db)
