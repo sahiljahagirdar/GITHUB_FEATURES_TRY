@@ -126,3 +126,22 @@ def get_my_api_key(db: session, user: UserModel):
         }
         for key in keys
     ]
+
+def delete_api_key(api_key_id:int,db:session,user:UserModel):
+    key = db.query(APIKEY).filter(APIKEY.id == api_key_id).first()
+
+
+    api_key = (db.query(APIKEY).filter(APIKEY.id == api_key_id,APIKEY.user_id == user.id).first())
+
+    if not api_key:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail='API key not found'
+        )
+    
+    db.delete(api_key)
+    db.commit()
+
+    return {
+        'message' : 'API key deleted'
+    }

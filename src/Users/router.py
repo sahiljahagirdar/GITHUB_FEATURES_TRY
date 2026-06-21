@@ -28,3 +28,7 @@ def generate_api_key(db=Depends(get_db),user:UserModel = Depends(is_authenticate
 @User_route.get('/my_api_keys')
 def get_my_keys(db=Depends(get_db),user:UserModel = Depends(is_authenticated)):
     return controller.get_my_api_key(db,user)
+
+@User_route.delete('/delete_api_key/{api_key_id}')
+def delete_api_key(api_key_id:int,db = Depends(get_db),user:UserModel=Depends(is_authenticated)):
+    return controller.delete_api_key(api_key_id,db,user)
