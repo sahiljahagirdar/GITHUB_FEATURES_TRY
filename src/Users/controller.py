@@ -76,3 +76,14 @@ def login_user(body:Login_Schema,db:session):
     )
 
     return {"token": token}
+
+def my_profile(db:session,user:UserModel):
+    user = db.query(UserModel).filter(UserModel.username == user.username).first()
+
+    if not user:
+        raise HTTPException(
+            status_code = status.HTTP_404_NOT_FOUND,
+            detail='User Not Found'
+        )
+    
+    return user

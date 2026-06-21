@@ -29,3 +29,9 @@ class Login_Schema(BaseModel):
 class Response_Model(BaseModel):
     username : str
     email : str
+
+class UserResponseProfile(BaseModel):
+    id : int
+    name : str
+    username : str
+    email : str
