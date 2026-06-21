@@ -16,3 +16,7 @@ def all_episodes(page: int = Query(1, ge=1),limit: int = Query(20, ge=1, le=100)
 @episode_route.get('/episode/{episode_id}',response_model=ResponseModel)
 def one_episode(episode_id:int,db:session = Depends(get_db)):
     return controller.get_one_episode(episode_id,db)
+
+@episode_route.get('/status')
+def my_status(db:session = Depends(get_db)):
+    return controller.stats(db)

@@ -52,3 +52,32 @@ def get_one_episode(episode_id:int,db:session):
         )
     
     return episode
+
+def stats(db: session):
+
+    total_episodes = db.query(func.count(Episode.id)).scalar()
+    highest_episode_number = db.query(func.max(cast(Episode.episode_number, Integer))).scalar()
+    first_episode = (db.query(Episode).order_by(Episode.id.asc()).first())
+    last_episode = (db.query(Episode).order_by(Episode.id.desc()).first())
+
+    missing_episodes = (highest_episode_number - total_episodes if highest_episode_number is not None else 0)
+
+    return {
+        "episodes_in_db": total_episodes,
+        "highest_episode_number": highest_episode_number,
+        "missing_episodes": missing_episodes,
+
+        "first_episode": {
+            "episode_number": first_episode.episode_number,
+            "title": first_episode.title,
+            "description": first_episode.description,
+            "runtime": first_episode.runtime
+        } if first_episode else None,
+
+        "last_episode": {
+            "episode_number": last_episode.episode_number,
+            "title": last_episode.title,
+            "description": last_episode.description,
+            "runtime": last_episode.runtime
+        } if last_episode else None,
+    }
