@@ -4,8 +4,8 @@ from src.Users.router import User_route
 from src.Episode.router import episode_route
 from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIMiddleware
-from slowapi import _rate_limit_exceeded_handler
 from src.utils.limiter import limiter
+from fastapi.responses import JSONResponse
 
 Base.metadata.create_all(engine)
 
@@ -13,11 +13,21 @@ app = FastAPI()
 app.include_router(User_route)
 app.include_router(episode_route)
 
+
+async def custom_rate_limit_handler(request, exc):
+    return JSONResponse(
+        status_code=429,
+        content={
+            "success": False,
+            "message": "Too many requests. Please try again later."
+        }
+    )
+
 app.state.limiter = limiter
 
 app.add_exception_handler(
     RateLimitExceeded,
-    _rate_limit_exceeded_handler
+    custom_rate_limit_handler
 )
 
 app.add_middleware(
