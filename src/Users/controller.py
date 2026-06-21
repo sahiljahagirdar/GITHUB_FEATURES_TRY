@@ -4,6 +4,8 @@ from src.Users.models import UserModel
 from fastapi import HTTPException,status
 from src.utils.settings import settings
 from datetime import datetime,timedelta
+from src.utils.api_key import generate_api_key
+from src.Users.api_key_model import APIKEY
 from pwdlib import PasswordHash
 import jwt
 
@@ -87,3 +89,20 @@ def my_profile(db:session,user:UserModel):
         )
     
     return user
+
+def generate_API_key(db:session,user:UserModel):
+    
+    raw_key, key_hash = generate_api_key()
+
+    api_key = APIKEY(
+        key_hash = key_hash,
+        user_id = user.id
+    )
+
+    db.add(api_key)
+    db.commit()
+    db.refresh(api_key)
+
+    return {
+        "api_key" : raw_key
+    }

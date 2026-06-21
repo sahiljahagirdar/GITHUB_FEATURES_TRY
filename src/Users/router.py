@@ -20,3 +20,7 @@ def login(body:Login_Schema,db = Depends(get_db)):
 @User_route.get('/profile',response_model=UserResponseProfile)
 def get_me(db = Depends(get_db),user:UserModel = Depends(is_authenticated)):
     return controller.my_profile(db,user)
+
+@User_route.post('/get_api_key')
+def generate_api_key(db=Depends(get_db),user:UserModel = Depends(is_authenticated)):
+    return controller.generate_API_key(db,user)
