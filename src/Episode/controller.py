@@ -92,3 +92,7 @@ def generate_random_episode(db:session):
         )
     
     return episode
+
+def latest_episode(db:session):
+    latest_episode = db.query(Episode).order_by(Episode.id.desc()).first()
+    return latest_episode

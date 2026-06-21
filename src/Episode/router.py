@@ -24,3 +24,7 @@ def my_status(db:session = Depends(get_db)):
 @episode_route.get('/random',response_model=ResponseModel)
 def get_random_episode(db = Depends(get_db)):
     return controller.generate_random_episode(db)
+
+@episode_route.get('/latest_episode',response_model=ResponseModel)
+def latest_episode(db=Depends(get_db)):
+    return controller.latest_episode(db)
