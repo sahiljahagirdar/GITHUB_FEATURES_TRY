@@ -40,3 +40,15 @@ def get_episodes(page: int, limit: int, db: session):
         "data": episodes
     }
 
+
+def get_one_episode(episode_id:int,db:session):
+    
+    episode = db.query(Episode).filter(Episode.episode_number == str(episode_id)).first()
+
+    if not episode:
+        raise HTTPException(
+            status_code = status.HTTP_404_NOT_FOUND,
+            detail='episode not found'
+        )
+    
+    return episode
